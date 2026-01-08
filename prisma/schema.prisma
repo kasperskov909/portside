@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model slip {
+  id                   Int       @id @default(autoincrement())
+  number               Int
+  type                 Int
+  pier                 Int
+  pier_slip_pierTopier pier      @relation("slip_pierTopier", fields: [pier], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_pier")
+  slip_type            slip_type @relation(fields: [type], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_slip_type")
+}
+
+model slip_type {
+  id           Int     @id @default(autoincrement())
+  depth        String?
+  display_name String?
+  slip         slip[]
+}
+
+model pier {
+  id                   Int    @id @default(autoincrement())
+  number               String
+  slip_slip_pierTopier slip[] @relation("slip_pierTopier")
+}
