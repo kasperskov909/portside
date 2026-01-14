@@ -23,3 +23,30 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.ps-btn {
+  display: flex;
+  height: 3rem;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--foreground);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  color: var(--background);
+  transition-property: background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.ps-btn:hover {
+  background-color: #383838;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ps-btn:hover {
+    background-color: #ccc;
+  }
+}

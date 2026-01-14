@@ -14,8 +14,11 @@ const prisma = new PrismaClient({ adapter }).$extends({
         async deletePier(id: number) {
             return prisma.pier.delete({ where: { id } })
         },
-        async listPier() {
+        async listPiers() {
             return prisma.pier.findMany()
+        },
+        async listPiersQuery(query: string, page: number) {
+            return prisma.pier.findMany({where: { number : { contains: query }}});
         },
         async updatePier(id: number, data: { number: string }) {
             return prisma.pier.update({ where: { id }, data })
