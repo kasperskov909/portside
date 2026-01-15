@@ -1,11 +1,7 @@
-import { listPiers } from '@/app/repos/pier';
+import { listAllPiers, listPiers } from '@/app/repos/pier/actions';
 
-export default async function PierList(props: { searchParams?: Promise<{ query?: string; page?: string;}>}) {
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || '';
-  const currentPage = Number(searchParams?.page) || 1;
-
-  const piers = await listPiers(query, currentPage);
+export default async function PierList(props: { query?: string, page?: number}) {
+  const piers = await listPiers(props.query || '', props.page || 1);
 
    return (
       <div className="inline-block min-w-full align-middle">

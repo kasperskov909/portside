@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export  default function Home() {
+export default function Home() {
   //await new Promise((resolve) => setTimeout(resolve, 3000));
 
   return (

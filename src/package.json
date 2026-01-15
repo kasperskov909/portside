@@ -7,7 +7,7 @@
     "build": "pnpm run prisma && next build",
     "start": "next start",
     "lint": "eslint",
-    "prisma": "npx prisma generate"
+    "prisma": "npx prisma generate && node scripts/fix-prisma-imports.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",

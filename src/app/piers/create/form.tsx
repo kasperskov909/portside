@@ -1,4 +1,6 @@
-import { createPier } from '@/app/repos/actions';
+'use client'
+
+import { createPier } from '@/app/repos/pier/actions';
 
 export default function Form() {
     console.log('form init');
