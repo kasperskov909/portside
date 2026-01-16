@@ -46,7 +46,7 @@ export default async function PierList(props: { query?: string, page?: number}) 
                           >
                             Edit
                           </Link>
-                          <DeletePierButton id={pier.id}></DeletePierButton>
+                          <DeletePierButton id={pier.id.toString()}></DeletePierButton>
                       <button  />
                     </div>
                   </td>
