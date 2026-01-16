@@ -1,8 +1,7 @@
-import { listAllPiers, listPiers } from '@/app/repos/pier/actions';
-
+import { listPiers } from '@/app/repos/pier/actions';
+import Link from 'next/link';
 export default async function PierList(props: { query?: string, page?: number}) {
   const piers = await listPiers(props.query || '', props.page || 1);
-
    return (
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
@@ -40,7 +39,13 @@ export default async function PierList(props: { query?: string, page?: number}) 
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <button />
+                          <Link
+                            href={`/piers/${pier.id}/edit`}
+                            className="ps-btn"
+                          >
+                            Edit
+                          </Link>
+                          <DeletePierButton id={pier.id}></DeletePierButton>
                       <button  />
                     </div>
                   </td>
