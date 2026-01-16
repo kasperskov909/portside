@@ -18,14 +18,14 @@ export async function createPier(formData: FormData) {
 
     const result = await prisma.pier.create({ data: { number: number } });
     console.log("pier created:", result);
-
-    //TODO: Responsiblity needs to be on page or component level
-    revalidatePath("/piers");
-    redirect("/piers");
   } catch (error) {
     console.error("Error in createPier:", error);
     throw error;
   }
+
+  //TODO: Responsiblity needs to be on page or component level
+  revalidatePath("/piers");
+  redirect("/piers");
 }
 
 export async function listPiers(query?: string, page?: number) {
@@ -35,33 +35,35 @@ export async function listPiers(query?: string, page?: number) {
   return prisma.pier.findMany({ where: { number: { contains: query } } });
 }
 
-export function getPier(id: number) {
+export async function getPier(id: number) {
   return prisma.pier.findUnique({ where: { id: id } });
 }
 
-export function deletePier(id: number) {
-    return prisma.pier.delete({where: { id: id }})
+export async function deletePier(id: number) {
+  return prisma.pier.delete({ where: { id: id } });
 }
 
-export async function listAllPiers() {
+export async  function listAllPiers() {
   return prisma.pier.findMany();
 }
 
-export function updatePier(id: number, formData: FormData) {
+export async function updatePier(id: number, formData: FormData) {
   try {
     const { number } = UpdatePier.parse({
       number: formData.get("number"),
     });
-    const result = prisma.pier.update({ where: { id: id }, data: { number: number } });
+    const result = prisma.pier.update({
+      where: { id: id },
+      data: { number: number },
+    });
     console.log("pier updated:", result);
-
-    //TODO: Responsiblity needs to be on page or component level
-    revalidatePath("/piers");
-    redirect("/piers");
   } catch (error) {
     console.error("Error in updatePier:", error);
     throw error;
   }
+  //TODO: Responsiblity needs to be on page or component level
+  revalidatePath("/piers");
+  redirect("/piers");
 }
 
 // async function withPrismaHandling<T>(query: Promise<T>): Promise<T> {

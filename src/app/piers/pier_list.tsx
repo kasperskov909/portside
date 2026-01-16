@@ -1,4 +1,5 @@
 import { listPiers } from '@/app/repos/pier/actions';
+import { DeletePierButton } from './delete_pier_button';
 import Link from 'next/link';
 export default async function PierList(props: { query?: string, page?: number}) {
   const piers = await listPiers(props.query || '', props.page || 1);
