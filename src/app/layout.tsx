@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "@/app/globals.css";
+import { signOut } from '@/auth';
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -28,6 +29,16 @@ export default function RootLayout({
         {children}
               </main>
     </div>
+            <form
+          action={async () => {
+            'use server';
+            await signOut({ redirectTo: '/' });
+          }}
+        >
+          <button className="ps-btn">
+            <div className="hidden md:block">Sign Out</div>
+          </button>
+        </form>
       </body>
     </html>
   );
