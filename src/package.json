@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "pnpm run prisma && next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint .",
     "prisma": "npx prisma generate && node scripts/fix-prisma-imports.js"
   },
   "dependencies": {

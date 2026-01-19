@@ -43,6 +43,8 @@ body {
 
 .ps-btn:hover {
   background-color: #383838;
+  cursor: pointer;
+
 }
 
 @media (prefers-color-scheme: dark) {

@@ -4,23 +4,41 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/app/repos/prisma";
 
+export type State = {
+  errors?: {
+    number?: string[];
+  };
+  message?: string | null;
+};
+
 const FormSchema = z.object({
-  number: z.string(),
+  number: z.string({
+    message: 'Number is required.',
+  }).min(1, {
+    message: 'Number is required',
+  }),
   id: z.number().optional(),
 });
 const UpdatePier = FormSchema.omit({ id: true });
 
-export async function createPier(formData: FormData) {
-  try {
-    const { number } = FormSchema.parse({
+export async function createPier(prevState: State, formData: FormData) {
+  const validatedFields  = FormSchema.safeParse({
       number: formData.get("number"),
     });
-
-    const result = await prisma.pier.create({ data: { number: number } });
+  if (!validatedFields.success) {
+      return {
+        errors: validatedFields.error.flatten().fieldErrors,
+        message: 'Missing Fields. Failed to create pier.',
+      };
+    }
+  try {
+    const result = await prisma.pier.create({ data: { number: validatedFields.data.number } });
     console.log("pier created:", result);
   } catch (error) {
     console.error("Error in createPier:", error);
-    throw error;
+    return {
+      message: 'Database Error: Failed to Create Pier.',
+    };
   }
 
   //TODO: Responsiblity needs to be on page or component level
@@ -29,37 +47,79 @@ export async function createPier(formData: FormData) {
 }
 
 export async function listPiers(query?: string, page?: number) {
-  const pageSize = 10;
-  const skip = page ? (page - 1) * pageSize : 0;
+  try {
+    const pageSize = 10;
+    const skip = page ? (page - 1) * pageSize : 0;
 
-  return prisma.pier.findMany({ where: { number: { contains: query } } });
+    const result = await prisma.pier.findMany({ where: { number: { contains: query } } });
+    return result;
+  } catch (error) {
+    console.error("Error in listPiers:", error);
+    return {
+      message: 'Database Error: Failed to List Piers.',
+    };
+  }
 }
 
 export async function getPier(id: number) {
-  return prisma.pier.findUnique({ where: { id: id } });
+  try {
+    const result = await prisma.pier.findUnique({ where: { id: id } });
+    return result;
+  } catch (error) {
+    console.error("Error in getPier:", error);
+    return undefined;
+  }
 }
 
 export async function deletePier(id: number) {
-  return prisma.pier.delete({ where: { id: id } });
-}
-
-export async  function listAllPiers() {
-  return prisma.pier.findMany();
-}
-
-export async function updatePier(id: number, formData: FormData) {
   try {
-    const { number } = UpdatePier.parse({
+    const result = await prisma.pier.delete({ where: { id: id } });
+    console.log("pier deleted:", result);
+  } catch (error) {
+    console.error("Error in deletePier:", error);
+    return {
+      message: 'Database Error: Failed to Delete Pier.',
+    };
+  }
+  revalidatePath("/piers");
+  redirect("/piers");
+}
+
+export async function listAllPiers() {
+  try {
+    const result = await prisma.pier.findMany();
+    return result;
+  } catch (error) {
+    console.error("Error in listAllPiers:", error);
+    return {
+      message: 'Database Error: Failed to List All Piers.',
+    };
+  }
+}
+
+export async function updatePier(id: number, prevState: State, formData: FormData) {
+
+    const validationResult = UpdatePier.safeParse({
       number: formData.get("number"),
     });
-    const result = prisma.pier.update({
+
+ if (!validationResult.success) {
+      return {
+        errors: validationResult.error.flatten().fieldErrors,
+        message: 'Missing Fields. Failed to update pier.',
+      };
+    }
+  try {
+    const result = await prisma.pier.update({
       where: { id: id },
-      data: { number: number },
+      data: { number: validationResult.data.number },
     });
     console.log("pier updated:", result);
   } catch (error) {
     console.error("Error in updatePier:", error);
-    throw error;
+    return {
+      message: 'Database Error: Failed to Update Pier.',
+    };
   }
   //TODO: Responsiblity needs to be on page or component level
   revalidatePath("/piers");
